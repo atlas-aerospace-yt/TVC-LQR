@@ -18,16 +18,16 @@ theta = -0.15 # angle of the rocket rad
 theta_dot = 0.15 # velocity of the rocket rad
 
 # State Space matrices
-A = np.matrix([[0, 10],
+A = np.matrix([[0, 1],
                [0, 0]]) # constant state matrix
 
 B = np.matrix([[0],
                [F*D/I]]) # constant input matrix
 
-Q = np.matrix([[1, 0],
-               [0, 1]]) # "stabalise the system"
+Q = np.matrix([[10, 0],
+               [0, 10]]) # "stabalise the system"
 
-R = np.matrix([[0.005]]) # "cost of energy to the system"
+R = np.matrix([[0.1]]) # "cost of energy to the system"
 
 x = np.matrix([[theta],
                [theta_dot]]) # state vector matrix
