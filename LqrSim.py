@@ -1,11 +1,17 @@
-import random
-import numpy as np
-import scipy.linalg
-import matplotlib.pyplot as plt
+import os
+try:
+    import random
+    import numpy as np
+    import scipy.linalg
+    import matplotlib.pyplot as plt
+except:
+    os.system("pip install matplotlib")
+    os.system("pip install numpy")
+    os.system("pip install scipy")
 
 # Hardware constants
 F = 18.0 # average thrust N
-I = 0.1 # mass moment of inertia kg.m^2
+I = 0.088 # mass moment of inertia kg.m^2
 D = 0.45 # distance from TVC to flight computer m
 DT = 0.001 # delta time s
 
@@ -14,8 +20,8 @@ GraphX = []
 GraphY = []
 
 # State space begining values and setpoint
-theta = -0.15 # angle of the rocket rad
-theta_dot = 0.15 # velocity of the rocket rad
+theta = 0.0 # angle of the rocket rad
+theta_dot = 0.07 # velocity of the rocket rad
 
 # State Space matrices
 A = np.matrix([[0, 1],
@@ -24,10 +30,10 @@ A = np.matrix([[0, 1],
 B = np.matrix([[0],
                [F*D/I]]) # constant input matrix
 
-Q = np.matrix([[10, 0],
-               [0, 10]]) # "stabalise the system"
+Q = np.matrix([[0.5, 0],
+               [0, 0.005]]) # "stabalise the system"
 
-R = np.matrix([[0.1]]) # "cost of energy to the system"
+R = np.matrix([[1]]) # "cost of energy to the system"
 
 x = np.matrix([[theta],
                [theta_dot]]) # state vector matrix
@@ -39,12 +45,15 @@ xf = np.matrix([[0],
 def Lqr(A,B,Q,R):
 
     # solves algebraic riccati equation
-    P = np.matrix(scipy.linalg.solve_continuous_are(A, B, Q, R))
+    X = np.matrix(scipy.linalg.solve_continuous_are(A, B, Q, R))
 
     # computes the optimal K value
-    K = np.matrix(scipy.linalg.inv(R)*(B.T*P))
+    K = np.matrix(scipy.linalg.inv(R)*(B.T*X))
 
-    return -K
+    # compute the eigenvalues
+    S = np.linalg.eigvals(A-np.dot(B,K))
+
+    return K, X, S
 
 # State function
 def UpdateState(A, x, B, u):
@@ -60,20 +69,20 @@ if __name__ == "__main__":
     for t in range(2000):
 
         # gets optimal gain (K)
-        K = Lqr(A, B, Q, R)
+        K, S, E = Lqr(A, B, Q, R)
 
         # calculates the error from setpoint
         e = x - xf
 
         # calculates optimal output (u)
-        u = K * e
+        u = -K * e
 
         # updates the state (x)
         x = x + DT * UpdateState(A,x,B,u)
 
         # appending the graph
         GraphX.append(t * DT)
-        GraphY.append(float(x[0]) * 180 / np.pi)
+        GraphY.append(float(x[1]) * 180 / np.pi)
 
     # outputs optimal gain
     print(K)
@@ -84,3 +93,4 @@ if __name__ == "__main__":
     plt.ylabel('output (deg)')
     plt.title('State Space Output')
     plt.show()
+
