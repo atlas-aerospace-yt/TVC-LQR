@@ -1,13 +1,9 @@
 import os
-try:
-    import random
-    import numpy as np
-    import scipy.linalg
-    import matplotlib.pyplot as plt
-except:
-    os.system("pip install matplotlib")
-    os.system("pip install numpy")
-    os.system("pip install scipy")
+import random
+import numpy as np
+import scipy.linalg
+import matplotlib.pyplot as plt
+
 
 # Hardware constants
 F = 18.0 # average thrust N
