@@ -8,7 +8,7 @@ import matplotlib.pyplot as plt
 # Hardware constants
 F = 18.0 # average thrust N
 I = 0.088 # mass moment of inertia kg.m^2
-D = 0.45 # distance from TVC to flight computer m
+D = 0.45 # distance from TVC tocenter of mass
 DT = 0.001 # delta time s
 
 # Graphin place-holders
