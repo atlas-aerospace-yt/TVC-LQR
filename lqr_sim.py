@@ -103,7 +103,7 @@ if __name__ == "__main__":
         GraphY.append(float(x[1]) * 180 / np.pi)
 
     # outputs optimal gain
-    print(K)
+    print(K, E)
 
     # plots the matplotlib graph
     plt.plot(GraphX, GraphY)
