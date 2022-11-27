@@ -38,7 +38,9 @@ xf = np.matrix([[0],
                 [0]]) # setpoint matrix
 
 # LQR function
-def Lqr(A,B,Q,R):
+def Lqr():
+
+    global A, B, Q, R
 
     # solves algebraic riccati equation
     X = np.matrix(scipy.linalg.solve_continuous_are(A, B, Q, R))
@@ -52,7 +54,9 @@ def Lqr(A,B,Q,R):
     return K, X, S
 
 # State function
-def UpdateState(A, x, B, u):
+def UpdateState():
+
+    global A, x, B,u
 
     # updates the state
     x_dot = A * x + B * u
@@ -65,7 +69,7 @@ if __name__ == "__main__":
     for t in range(2000):
 
         # gets optimal gain (K)
-        K, S, E = Lqr(A, B, Q, R)
+        K, S, E = Lqr()
 
         # calculates the error from setpoint
         e = x - xf
@@ -74,7 +78,7 @@ if __name__ == "__main__":
         u = -K * e
 
         # updates the state (x)
-        x = x + DT * UpdateState(A,x,B,u)
+        x = x + DT * UpdateState()
 
         # appending the graph
         GraphX.append(t * DT)
