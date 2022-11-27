@@ -24,8 +24,8 @@ GraphX = []
 GraphY = []
 
 # State space begining values and setpoint
-theta = 0.0 # angle of the rocket rad
-theta_dot = 0.07 # velocity of the rocket rad
+THETA = 0.0 # angle of the rocket rad
+THETA_DOT = 0.07 # velocity of the rocket rad
 
 # State Space matrices
 A = np.matrix([[0, 1],
@@ -39,8 +39,8 @@ Q = np.matrix([[0.5, 0],
 
 R = np.matrix([[1]]) # "cost of energy to the system"
 
-x = np.matrix([[theta],
-               [theta_dot]]) # state vector matrix
+x = np.matrix([[THETA],
+               [THETA_DOT]]) # state vector matrix
 
 xf = np.matrix([[0],
                 [0]]) # setpoint matrix
@@ -56,15 +56,15 @@ def lqr():
     """
 
     # solves algebraic riccati equation
-    X = np.matrix(scipy.linalg.solve_continuous_are(A, B, Q, R))
+    x = np.matrix(scipy.linalg.solve_continuous_are(A, B, Q, R))
 
     # computes the optimal K value
-    K = np.matrix(scipy.linalg.inv(R)*(B.T*X))
+    k = np.matrix(scipy.linalg.inv(R)*(B.T*x))
 
     # compute the eigenvalues
-    S = np.linalg.eigvals(A-np.dot(B,K))
+    s = np.linalg.eigvals(A-np.dot(B,k))
 
-    return K, X, S
+    return k, x, s
 
 # State function
 def update_state():
