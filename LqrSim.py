@@ -55,8 +55,6 @@ def lqr():
         np.array: the eigen values
     """
 
-    global A, B, Q, R
-
     # solves algebraic riccati equation
     X = np.matrix(scipy.linalg.solve_continuous_are(A, B, Q, R))
 
@@ -69,7 +67,7 @@ def lqr():
     return K, X, S
 
 # State function
-def UpdateState():
+def update_state():
     """
     Updates the state space model - discrete
     This output must then be used in the equation x = x + dt * updated state
@@ -77,8 +75,6 @@ def UpdateState():
     Returns:
         np.array: the change in state
     """
-
-    global A, x, B,u
 
     # updates the state
     x_dot = A * x + B * u
@@ -100,7 +96,7 @@ if __name__ == "__main__":
         u = -K * e
 
         # updates the state (x)
-        x = x + DT * UpdateState()
+        x = x + DT * update_state()
 
         # appending the graph
         GraphX.append(t * DT)
