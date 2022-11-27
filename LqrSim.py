@@ -1,5 +1,13 @@
-import os
-import random
+"""
+A python state space simulation.
+
+Socials:
+    https://github.com/atlas-aerospace-yt
+    https://www.youtube.com/channel/UCWd6oqc8nbL-EX3Cxxk8wFA
+
+27/11/2022
+"""
+
 import numpy as np
 import scipy.linalg
 import matplotlib.pyplot as plt
@@ -37,8 +45,15 @@ x = np.matrix([[theta],
 xf = np.matrix([[0],
                 [0]]) # setpoint matrix
 
-# LQR function
-def Lqr():
+def lqr():
+    """
+    Returns the optimal values and eigen values for the simulation
+
+    Returns:
+        np.array: the optimal results
+        np.array: the riccati equation
+        np.array: the eigen values
+    """
 
     global A, B, Q, R
 
@@ -55,6 +70,13 @@ def Lqr():
 
 # State function
 def UpdateState():
+    """
+    Updates the state space model - discrete
+    This output must then be used in the equation x = x + dt * updated state
+
+    Returns:
+        np.array: the change in state
+    """
 
     global A, x, B,u
 
@@ -69,7 +91,7 @@ if __name__ == "__main__":
     for t in range(2000):
 
         # gets optimal gain (K)
-        K, S, E = Lqr()
+        K, S, E = lqr()
 
         # calculates the error from setpoint
         e = x - xf
@@ -93,4 +115,3 @@ if __name__ == "__main__":
     plt.ylabel('output (deg)')
     plt.title('State Space Output')
     plt.show()
-
