@@ -64,7 +64,7 @@ def lqr():
     # compute the eigenvalues
     eig_vals = np.linalg.eigvals(A-np.dot(B,k))
 
-    return k, x, y_prime
+    return k, y_prime, eig_vals
 
 # State function
 def update_state():
@@ -103,7 +103,7 @@ if __name__ == "__main__":
         GraphY.append(float(x[1]) * 180 / np.pi)
 
     # outputs optimal gain
-    print(K, E)
+    print(K)
 
     # plots the matplotlib graph
     plt.plot(GraphX, GraphY)
