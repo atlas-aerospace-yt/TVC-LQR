@@ -12,12 +12,14 @@ import numpy as np
 import scipy.linalg
 import matplotlib.pyplot as plt
 
+# Time constraints
+DT = 0.001 # delta time s
+RUN_TIME = 5 # simulation time s
 
 # Hardware constants
 F = 18.0 # average thrust N
 I = 0.088 # mass moment of inertia kg.m^2
 D = 0.45 # distance from TVC tocenter of mass
-DT = 0.001 # delta time s
 
 # Graphin place-holders
 GraphX = []
@@ -100,7 +102,7 @@ if __name__ == "__main__":
     GraphOutputY = []
 
     # main loop
-    for t in range(2000):
+    for t in range(int(RUN_TIME / DT)):
 
         # gets optimal gain (K)
         K, S, E = lqr()
