@@ -9,6 +9,7 @@ Socials:
 """
 
 import numpy as np
+import random
 import scipy.linalg
 import matplotlib.pyplot as plt
 
@@ -17,9 +18,8 @@ DT = 0.001 # delta time s
 RUN_TIME = 5 # simulation time s
 
 # Hardware constants
-F = 18.0 # average thrust N
-I = 0.088 # mass moment of inertia kg.m^2
-D = 0.45 # distance from TVC tocenter of mass
+I = 0.054 # mass moment of inertia kg.m^2
+D = 0.47 # distance from TVC tocenter of mass
 
 # Graphin place-holders
 GraphX = []
@@ -38,17 +38,17 @@ A = np.matrix([[0, 1, 0, 0],
                [0, 0, 0, 0]]) # constant state matrix
 
 B = np.matrix([[0, 0],
-               [F*D/I, 0],
+               [D/I, 0],
                [0, 0],
-               [0, F*D/I]]) # constant input matrix
+               [0, D/I]]) # constant input matrix
 
-Q = np.matrix([[10, 0, 0, 0],
-               [0, 0.5, 0, 0],
-               [0, 0, 10, 0],
-               [0, 0, 0, 0.5]]) # "stabalise the system"
+Q = np.matrix([[27, 0, 0, 0],
+               [0, 2, 0, 0],
+               [0, 0, 27, 0],
+               [0, 0, 0, 2]]) # "stabalise the system"
 
-R = np.matrix([[0.1, 0],
-               [0, 0.1]]) # "cost of energy to the system"
+R = np.matrix([[1, 0],
+               [0, 1]]) # "cost of energy to the system"
 
 x = np.matrix([[THETA_X],
                [THETA_DOT_X],
@@ -99,7 +99,9 @@ def update_state():
 if __name__ == "__main__":
 
     GraphOutputX = []
+    GraphOutputXRate = []
     GraphOutputY = []
+    GraphOutputYRate= []
 
     # main loop
     for t in range(int(RUN_TIME / DT)):
@@ -109,9 +111,13 @@ if __name__ == "__main__":
 
         # calculates the error from setpoint
         e = x - xf
+        e[0] += random.uniform(-5 * np.pi / 180, 5 * np.pi / 180)
+        e[1] += random.uniform(-5 * np.pi / 180, 5 * np.pi / 180)
+        e[2] += random.uniform(-5 * np.pi / 180, 5 * np.pi / 180)
+        e[3] += random.uniform(-5 * np.pi / 180, 5 * np.pi / 180)
 
         # calculates optimal output (u)
-        u = -K * e
+        u = -K * e# + np.matrix([[10*np.pi/180],[10*np.pi/180]])
 
         # updates the state (x)
         x = x + DT * update_state()
@@ -120,10 +126,14 @@ if __name__ == "__main__":
         GraphX.append(t * DT)
         GraphOutputX.append(float(x[0]) * 180 / np.pi)
         GraphOutputY.append(float(x[2]) * 180 / np.pi)
+        GraphOutputXRate.append(float(x[1]) * 180 / np.pi)
+        GraphOutputYRate.append(float(x[3]) * 180 / np.pi)
 
     # appends plots to be plotted
     GraphY.append(GraphOutputX)
     GraphY.append(GraphOutputY)
+    #GraphY.append(GraphOutputXRate)
+    #GraphY.append(GraphOutputYRate)
 
     # outputs optimal gain
     print(K.round(3))
