@@ -100,7 +100,7 @@ if __name__ == "__main__":
 
         # appending the graph
         GraphX.append(t * DT)
-        GraphY.append(float(x[1]) * 180 / np.pi)
+        GraphY.append(float(x[0]) * 180 / np.pi)
 
     # outputs optimal gain
     print(K)
